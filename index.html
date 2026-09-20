@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>가계부</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;900&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+
+  <header class="app-header">
+    <div class="brand">
+      <span class="brand-mark">▤</span>
+      <h1>가계부</h1>
+    </div>
+    <div class="header-actions">
+      <button id="themeToggle" class="icon-btn" aria-label="테마 전환">🌙</button>
+      <button id="resetBtn" class="text-btn">초기화</button>
+    </div>
+  </header>
+
+  <section class="panel asset-panel">
+    <div class="panel-head">
+      <h2 class="panel-title asset-title">내 자산</h2>
+      <button id="addAssetBtn" class="sub-btn asset-btn" type="button">+ 자산 추가</button>
+    </div>
+    <div id="assetGrid" class="asset-grid"></div>
+    <div class="hero-total">
+      <h3 class="hero-label asset-text">총 자산</h3>
+      <span id="assetTotal" class="hero-value asset-accent">₩0</span>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2 class="panel-title">월별 내역</h2>
+    <div id="monthTabs" class="month-tabs"></div>
+
+    <h3 class="subsection-title income-title">입금 내역</h3>
+    <div class="ledger">
+      <div class="ledger-head"><span>항목</span><span>금액</span></div>
+      <div id="incomeRows" class="income-ledger"></div>
+    </div>
+    <div class="hero-total">
+      <h3 class="hero-label income-text"><span id="activeMonthLabelIncome">9월</span> 총수입</h3>
+      <span id="incomeTotal" class="hero-value income-accent">₩0</span>
+    </div>
+
+    <h3 class="subsection-title expense-title">지출 내역 <small class="sub-caption">(토스 출금)</small></h3>
+    <div class="ledger">
+      <div class="ledger-head"><span>항목</span><span>금액</span></div>
+      <div id="expenseRows" class="expense-ledger"></div>
+    </div>
+    <div class="hero-total">
+      <h3 class="hero-label expense-text"><span id="activeMonthLabel">9월</span> 총지출</h3>
+      <span id="monthTotal" class="hero-value expense-accent">₩0</span>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2 class="panel-title">요약</h2>
+    <div class="summary-grid">
+      <div class="summary-row">
+        <span>총 자산</span>
+        <span id="sumAssets" class="positive">₩0</span>
+      </div>
+      <div class="summary-row">
+        <span>전체 수입 (9월–2월)</span>
+        <span id="sumIncome" class="positive">₩0</span>
+      </div>
+      <div class="summary-row">
+        <span>전체 지출 (9월–2월)</span>
+        <span id="sumExpense" class="negative">₩0</span>
+      </div>
+      <div class="summary-row summary-row-main">
+        <span>남은 금액</span>
+        <span id="sumRemaining">₩0</span>
+      </div>
+    </div>
+    <div class="account-callouts">
+      <div class="account-callout toss-callout">
+        <span class="label">토스 예상 잔액<small>토스 입금(월급 등 자동 연동) − 이번 달 지출</small></span>
+        <span id="tossEstimate" class="value accent">₩0</span>
+      </div>
+      <div class="account-callout kb-callout">
+        <span class="label">KB국민은행 잔액<small>국취제 훈련자금 입금 자동 연동</small></span>
+        <span id="kbEstimate" class="value accent">₩0</span>
+      </div>
+    </div>
+  </section>
+
+  <p class="app-footer">숫자나 100000+50000-20000 같은 계산식을 입력하고 Enter나 다른 칸을 클릭하면 자동으로 반영돼요. 입력한 내용은 이 브라우저에 저장됩니다.</p>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
