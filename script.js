@@ -129,10 +129,90 @@
 
     var input = document.createElement('input');
     input.type = 'text';
-    input.inputMode = 'decimal';
+    input.inputMode = 'text';
     input.autocomplete = 'off';
+    input.autocorrect = 'off';
+    input.autocapitalize = 'off';
+    input.spellcheck = false;
     input.className = 'money-input';
     input.value = formatWon(fieldData.value);
+
+    // 모바일 및 간편 수식 입력을 위한 퀵 연산 툴바
+    var quickBar = document.createElement('div');
+    quickBar.className = 'quick-calc-bar';
+
+    var operators = [
+      { label: '+', op: '+' },
+      { label: '−', op: '-' },
+      { label: '+10만', add: 100000 },
+      { label: '+5만', add: 50000 },
+      { label: '+1만', add: 10000 },
+      { label: '000', append: '000' },
+      { label: 'C', clear: true }
+    ];
+
+    operators.forEach(function(item){
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'quick-op-btn';
+      btn.textContent = item.label;
+      btn.tabIndex = -1; // 탭 이동 방지
+
+      // 터치/클릭 시 input blur 방지 및 연산자 입력
+      btn.addEventListener('mousedown', function(e){ e.preventDefault(); });
+      btn.addEventListener('touchstart', function(e){ e.preventDefault(); }, {passive:false});
+
+      btn.addEventListener('click', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+
+        var cur = input.value.trim();
+        // 포커스 상태가 아니었다면 raw 값 기준으로 전환
+        if(document.activeElement !== input){
+          cur = fieldData.raw;
+          input.value = cur;
+        }
+
+        if(item.clear){
+          input.value = '0';
+          fieldData.raw = '0';
+          fieldData.value = 0;
+          input.focus();
+          commit(false);
+          return;
+        }
+
+        if(item.op){
+          // 마지막 글자가 이미 연산자이면 교체
+          if(/[+\-*/]$/.test(cur)){
+            cur = cur.slice(0, -1) + item.op;
+          } else {
+            cur = cur + item.op;
+          }
+          input.value = cur;
+          input.focus();
+        } else if(item.add){
+          if(cur === '' || cur === '0'){
+            cur = String(item.add);
+          } else if(/[+\-*/]$/.test(cur)){
+            cur = cur + item.add;
+          } else {
+            cur = cur + '+' + item.add;
+          }
+          input.value = cur;
+          input.focus();
+        } else if(item.append){
+          if(cur === '' || cur === '0'){
+            cur = '0';
+          } else {
+            cur = cur + item.append;
+          }
+          input.value = cur;
+          input.focus();
+        }
+      });
+      quickBar.appendChild(btn);
+    });
 
     var hint = document.createElement('div');
     hint.className = 'formula-hint';
@@ -140,10 +220,13 @@
 
     input.addEventListener('focus', function(){
       input.value = fieldData.raw;
-      input.select();
+      wrap.classList.add('is-focused');
+      setTimeout(function(){
+        try { input.select(); } catch(e){}
+      }, 50);
     });
 
-    function commit(){
+    function commit(keepFocus){
       var val = input.value.trim();
       var result = evaluateFormula(val === '' ? '0' : val);
       if(result === null){
@@ -154,17 +237,24 @@
       }
       fieldData.raw = (val === '' ? '0' : val);
       fieldData.value = result;
-      input.value = formatWon(result);
+      if(!keepFocus && document.activeElement !== input){
+        input.value = formatWon(result);
+      }
       hint.textContent = /[+\-*/()]/.test(fieldData.raw) ? '= ' + fieldData.raw : '';
       onCommit();
     }
 
-    input.addEventListener('blur', commit);
+    input.addEventListener('blur', function(){
+      wrap.classList.remove('is-focused');
+      commit(false);
+    });
+
     input.addEventListener('keydown', function(e){
       if(e.key === 'Enter'){ e.preventDefault(); input.blur(); }
     });
 
     wrap.appendChild(input);
+    wrap.appendChild(quickBar);
     wrap.appendChild(hint);
     return wrap;
   }
