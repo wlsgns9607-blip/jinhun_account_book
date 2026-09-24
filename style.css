@@ -164,9 +164,67 @@
   }
   .money-input:focus{ outline:none; border-bottom-color:var(--accent); text-align:left; }
   .money-input.input-error{ border-bottom-color:var(--expense); animation:shake .3s; }
+
+  /* 퀵 연산 바 (스마트폰 + - 수식 계산 보조) */
+  .quick-calc-bar{
+    display:none;
+    flex-wrap:wrap;
+    gap:4px;
+    margin-top:6px;
+    justify-content:flex-end;
+    animation:fadeIn .15s ease-out;
+  }
+  .field-wrap.is-focused .quick-calc-bar{
+    display:flex;
+  }
+  .quick-op-btn{
+    background:var(--surface-alt);
+    border:1px solid var(--line);
+    color:var(--ink);
+    font-family:var(--font-mono);
+    font-size:16px;
+    font-weight:600;
+    padding:6px 10px;
+    border-radius:4px;
+    cursor:pointer;
+    user-select:none;
+    -webkit-user-select:none;
+    min-height:36px;
+    min-width:36px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    transition:background .1s, transform .05s, border-color .1s;
+  }
+  .quick-op-btn:hover{
+    background:var(--accent-soft);
+    color:var(--accent);
+    border-color:var(--accent);
+  }
+  .quick-op-btn:active{
+    transform:scale(0.94);
+    background:var(--accent);
+    color:#FFFFFF;
+  }
+  [data-theme="dark"] .quick-op-btn{
+    background:#252F31;
+    border-color:#354447;
+    color:#EDEFEC;
+  }
+  [data-theme="dark"] .quick-op-btn:hover{
+    background:#1E3330;
+    color:var(--accent);
+    border-color:var(--accent);
+  }
+  @keyframes fadeIn{
+    from{ opacity:0; transform:translateY(-2px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+
   .formula-hint{
     font-family:var(--font-mono); font-size:20px; color:var(--ink-faint);
     min-height:1.2em; text-align:right; word-break:break-all;
+    margin-top:2px;
   }
   @keyframes shake{
     0%,100%{ transform:translateX(0); }
@@ -354,6 +412,20 @@
     .hero-value{ font-size:28px; }
     .brand h1{ font-size:24px; }
     .brand-mark{ width:40px; height:40px; font-size:20px; }
+
+    /* 모바일 퀵 연산 바 */
+    .quick-calc-bar{
+      justify-content:flex-start;
+      gap:6px;
+      margin-top:8px;
+    }
+    .quick-op-btn{
+      flex:1 1 auto;
+      min-width:42px;
+      min-height:40px;
+      font-size:17px;
+      padding:8px 6px;
+    }
   }
 
   @media (max-width: 380px){
